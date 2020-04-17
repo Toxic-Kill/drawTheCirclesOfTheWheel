@@ -5,6 +5,7 @@
 using namespace std;
 using namespace cv;
 
+//定义计算两点距离的函数
 double Distance(Point pt1, Point pt2)
 {
 	return sqrt((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y));
@@ -39,14 +40,18 @@ int main()
 	{
 		//获得最小外接矩形
 		cv::RotatedRect rbox = minAreaRect(contours[i]);
-		//计算宽长比
+		//计算宽长比和面积
 		cv::Point2f vtx[4];
 		rbox.points(vtx);
 		double bLR = Distance(vtx[0], vtx[1])/Distance(vtx[1],vtx[2]);
+		double area = Distance(vtx[0], vtx[1]) * Distance(vtx[1], vtx[2]);
 		//筛选
-		if (bLR > 0.8&&bLR < 1.2)
+		if (bLR > 0.9&&bLR < 1.1)
 		{
-			cv::drawContours(dstMat, contours, i, Scalar(0, 255, 255), -1, 8);
+			if (area > 50)
+			{
+				cv::drawContours(dstMat, contours, i, Scalar(0, 255, 255), -1, 8);
+			}
 		}
 	}
 	//显示结果
